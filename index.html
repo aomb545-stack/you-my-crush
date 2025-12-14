@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ကျွန်တော်ရဲ့ အချစ်</title>
+    <style>
+        /* CSS: အသွင်အပြင် အလှဆင်ခြင်း */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fce4ec; /* ပန်းရောင်နုနု နောက်ခံ */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* ခလုတ်ရွေ့ရင် scroll bar ပေါ်မလာအောင် */
+        }
+        .container {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative; /* ခလုတ်ရဲ့ position ကို ကန့်သတ်ပေးဖို့ */
+        }
+        h1 {
+            color: #e91e63; /* ပန်းရောင်ရင့်ရင့် */
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        .buttons-group {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            gap: 50px; 
+            min-height: 50px;
+        }
+        button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #yesBtn {
+            background-color: #4CAF50; /* အစိမ်းရောင် - ချစ်တယ် */
+            color: white;
+            z-index: 10; /* မချစ်ဘူး ခလုတ် အောက်မှာ မရောက်အောင် */
+        }
+        #noBtn {
+            background-color: #F44336; /* အနီရောင် - မချစ်ဘူး */
+            color: white;
+            position: absolute; /* ရွေ့လျားနိုင်ဖို့ */
+            left: 60%; /* အစမှာ ညာဘက်နားမှာ ထားမယ် */
+            transition: all 0.5s ease; /* ရွေ့လျားမှုကို ချောမွေ့စေဖို့ */
+        }
+        /* Message Box */
+        #message {
+            display: none;
+            margin-top: 40px;
+            padding: 30px;
+            background-color: #ffcdd2;
+            color: #d81b60;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ကျွန်တော်ရဲ့ အချစ်ကို လက်ခံပေးပါနော်? ❤️</h1>
+        <div class="buttons-group">
+            <button id="yesBtn">ချစ်တယ်! 🥰</button>
+            <button id="noBtn" onclick="moveNoButton()">မချစ်ဘူး 🥺</button> 
+        </div>
+        <div id="message">
+            ယေး! ကမ္ဘာပေါ်မှာ အပျော်ရွှင်ဆုံးလူသား ဖြစ်သွားပြီ! ကျေးဇူးတင်ပါတယ်! ✨
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const messageDiv = document.getElementById('message');
+        const container = document.querySelector('.container');
+        
+        // ဘယ်နှစ်ခါ နှိပ်မိလဲ ရေတွက်ဖို့
+        let noClickCount = 0; 
+
+        // "မချစ်ဘူး" ခလုတ်ကို ရွှေ့တဲ့ Function
+        function moveNoButton() {
+            // click အရေအတွက် တိုးမယ်
+            noClickCount++; 
+
+            if (noClickCount >= 5) {
+                // ၅ ခါ ဒါမှမဟုတ် ၅ ခါထက်ကျော်ရင် ခလုတ်ကို ဖျောက်မယ်
+                noBtn.style.display = 'none';
+                document.querySelector('h1').textContent = "ဟီးဟီး... အခွင့်အရေး မရှိတော့ဘူးနော်! 😉";
+                return; // function ကနေ ထွက်မယ်
+            }
+
+            // container ရဲ့ အရွယ်အစားနဲ့ နေရာကို တွက်မယ်
+            const containerRect = container.getBoundingClientRect();
+            
+            // ခလုတ် အသစ် ရွှေ့နိုင်မယ့် အကျယ်အဝန်းကို သတ်မှတ်မယ် (container ထဲမှာပဲ ရှိနေစေဖို့)
+            const randomX = Math.random();
+            const randomY = Math.random();
+            
+            // နေရာအသစ် တွက်ချက်ခြင်း (container ရဲ့ အလယ်ဗဟိုမှာ မဟုတ်ဘဲ ပတ်ပတ်လည် ရွေ့အောင်)
+            const newX = randomX * (containerRect.width - noBtn.offsetWidth);
+            const newY = randomY * (containerRect.height - noBtn.offsetHeight);
+            
+            // ခလုတ်ကို နေရာအသစ်ဆီ ရွှေ့မယ်
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            
+            // ခလုတ် စာသားပြောင်းလဲခြင်း
+            noBtn.textContent = `ဖမ်းစမ်း! (${5 - noClickCount} ကြိမ်ပဲ ကျန်တော့တယ်) 😝`;
+        }
+
+        // "ချစ်တယ်" ကို နှိပ်ရင် Message ပေါ်လာအောင် လုပ်မယ်
+        yesBtn.addEventListener('click', () => {
+            // မချစ်ဘူး ခလုတ်ကို ချက်ချင်း ဖျောက်လိုက်မယ်
+            noBtn.style.display = 'none'; 
+            
+            // Message ကို ပြသမယ်
+            messageDiv.style.display = 'block';
+            
+            // ခေါင်းစဉ်ကို ပြောင်းမယ်
+            document.querySelector('h1').textContent = "အခုကစပြီး... ငါတို့နှစ်ယောက်! 💖";
+            
+            // "ချစ်တယ်" ခလုတ်ကို ပိုလှအောင် ပြောင်းလဲမယ်
+            yesBtn.style.backgroundColor = '#d81b60';
+            yesBtn.style.transform = 'scale(1.1)';
+            yesBtn.style.boxShadow = '0 0 30px rgba(255, 105, 180, 0.8)';
+            yesBtn.textContent = '🥳';
+
+        });
+
+    </script>
+</body>
+</html>
